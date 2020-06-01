@@ -8,6 +8,19 @@ namespace jaytwo.UrlHelper
 {
     public static class Url
     {
+        public static string Format(string format, params string[] formatArgs)
+        {
+            var escapedArgs = formatArgs?.Select(x => Uri.EscapeDataString(x ?? string.Empty)).ToArray();
+            var path = string.Format(format, escapedArgs);
+            return path;
+        }
+
+        public static string Format(string format, params object[] formatArgs)
+        {
+            var argsAsStrings = formatArgs.Select(Convert.ToString).ToArray();
+            return Format(format, argsAsStrings);
+        }
+
         public static string GetPath(string url)
         {
             if (url == null)
@@ -70,15 +83,14 @@ namespace jaytwo.UrlHelper
 
         public static string SetPath(string url, string pathFormat, params string[] formatArgs)
         {
-            var escapedArgs = formatArgs?.Select(Uri.EscapeDataString).ToArray();
-            var path = string.Format(pathFormat, escapedArgs);
+            var path = Format(pathFormat, formatArgs);
             return SetPath(url, path);
         }
 
         public static string SetPath(string url, string pathFormat, params object[] formatArgs)
         {
-            var escapedArgs = formatArgs?.Select(x => Uri.EscapeDataString($"{x}")).ToArray();
-            return SetPath(url, pathFormat, escapedArgs);
+            var path = Format(pathFormat, formatArgs);
+            return SetPath(url, path);
         }
 
         public static string AppendPath(string url, string path)
@@ -101,22 +113,16 @@ namespace jaytwo.UrlHelper
             return SetPath(url, newPath);
         }
 
-        public static string AppendPathSegment(string url, string segment)
-        {
-            return AppendPath(url, "{0}", segment);
-        }
-
         public static string AppendPath(string url, string pathFormat, params string[] formatArgs)
         {
-            var escapedArgs = formatArgs?.Select(Uri.EscapeDataString).ToArray();
-            var path = string.Format(pathFormat, escapedArgs);
+            var path = Format(pathFormat, formatArgs);
             return AppendPath(url, path);
         }
 
         public static string AppendPath(string url, string pathFormat, params object[] formatArgs)
         {
-            var escapedArgs = formatArgs?.Select(x => Uri.EscapeDataString($"{x}")).ToArray();
-            return AppendPath(url, pathFormat, escapedArgs);
+            var path = Format(pathFormat, formatArgs);
+            return AppendPath(url, path);
         }
 
         public static string GetQuery(string url)

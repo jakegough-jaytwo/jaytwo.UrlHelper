@@ -92,6 +92,7 @@ namespace jaytwo.UrlHelper.Tests
         [InlineData("http://www.google.com/foo?hello=world", "bar", "http://www.google.com/foo/bar?hello=world")]
         [InlineData("http://www.google.com/foo", "/bar", "http://www.google.com/foo/bar")]
         [InlineData("http://www.google.com/foo?hello=world", "/bar", "http://www.google.com/foo/bar?hello=world")]
+        [InlineData("", "foo/bar", "/foo/bar")]
         [InlineData("/foo", "/bar", "/foo/bar")]
         [InlineData("/foo", "bar", "/foo/bar")]
         [InlineData("/foo?hello=world", "/bar", "/foo/bar?hello=world")]
@@ -108,14 +109,28 @@ namespace jaytwo.UrlHelper.Tests
         }
 
         [Theory]
-        [InlineData("http://www.google.com", "foo", "http://www.google.com/foo")]
-        [InlineData("/foo?hello=world", "bar/baz", "/foo/bar%2Fbaz?hello=world")]
-        public void AppendPathSegment(string baseUrl, string path, string expectedUrl)
+        [InlineData("http://www.google.com/{0}/foo.bar", new[] { "banana" }, "http://www.google.com/banana/foo.bar")]
+        [InlineData("http://www.google.com/{0}/foo.bar", new[] { default(string) }, "http://www.google.com//foo.bar")]
+        public void Format(string format, string[] args, string expectedUrl)
         {
             // arrange
 
             // act
-            var url = Url.AppendPathSegment(baseUrl, path);
+            var url = Url.Format(format, args);
+
+            // assert
+            Assert.Equal(expectedUrl, url);
+        }
+
+        [Theory]
+        [InlineData("http://www.google.com/{0}/foo.bar", new object[] { 1 }, "http://www.google.com/1/foo.bar")]
+        [InlineData("http://www.google.com/{0}/foo.bar", new object[] { null }, "http://www.google.com//foo.bar")]
+        public void Format_value_object(string format, object[] args, string expectedUrl)
+        {
+            // arrange
+
+            // act
+            var url = Url.Format(format, args);
 
             // assert
             Assert.Equal(expectedUrl, url);
