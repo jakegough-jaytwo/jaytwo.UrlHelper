@@ -76,7 +76,7 @@ namespace jaytwo.UrlHelper
 
         private static string GetQueryString(IEnumerable<KeyValuePair<string, string>> data)
         {
-            return string.Join("&", data.Select(x => $"{Uri.EscapeDataString(x.Key)}={Uri.EscapeDataString(x.Value)}"));
+            return string.Join("&", data.Select(x => $"{Uri.EscapeDataString(x.Key)}={Uri.EscapeDataString(x.Value ?? string.Empty)}"));
         }
 
         private static IList<KeyValuePair<string, string>> ParseQueryStringAsKeyValuePairs(string queryString)
@@ -92,7 +92,7 @@ namespace jaytwo.UrlHelper
                 {
                     var keyValueSplit = keyValuePair.Split('=');
                     var key = Uri.UnescapeDataString(keyValueSplit[0]);
-                    var value = (keyValueSplit.Length > 1) ? Uri.UnescapeDataString(keyValueSplit[1]) : null;
+                    var value = (keyValueSplit.Length > 1) ? Uri.UnescapeDataString(keyValueSplit[1] ?? string.Empty) : null;
                     result.Add(new KeyValuePair<string, string>(key, value));
                 }
             }

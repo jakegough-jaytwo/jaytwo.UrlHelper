@@ -53,6 +53,7 @@ namespace jaytwo.UrlHelper.Tests
         [InlineData("foo", "/bar", "/bar")]
         [InlineData("/foo", "bar", "/bar")]
         [InlineData("foo", "bar", "bar")]
+        [InlineData("foo", "foo%2Fbar", "foo%2Fbar")]
         [InlineData("/foo?hello=world", "/bar", "/bar?hello=world")]
         [InlineData("/foo?hello=world", "bar", "/bar?hello=world")]
         public void SetPath(string baseUrl, string path, string expectedUrl)
@@ -129,6 +130,7 @@ namespace jaytwo.UrlHelper.Tests
         [InlineData("/a?foo=bar", "fizz", "buzz", "/a?foo=bar&fizz=buzz")]
         [InlineData("/a?foo=bar", "fi&zz", "bu zz", "/a?foo=bar&fi%26zz=bu%20zz")]
         [InlineData("/a?fi%26zz=bu%20zz", "foo", "bar", "/a?fi%26zz=bu%20zz&foo=bar")]
+        [InlineData("/a?fi%26zz=bu%20zz", "foo", null, "/a?fi%26zz=bu%20zz&foo=")]
         public void SetQueryParameter(string baseUrl, string key, string value, string expectedUrl)
         {
             // arrange
@@ -171,6 +173,38 @@ namespace jaytwo.UrlHelper.Tests
 
             // act
             var query = Url.GetQuery(url);
+
+            // assert
+            Assert.Equal(expected, query);
+        }
+
+        [Theory]
+        [InlineData("http://www.google.com/?foo=bar&fizz=0&fizz=1&bar=1", "foo", "bar")]
+        [InlineData("http://www.google.com/?foo=bar&fizz=0", "fizz", "0")]
+        [InlineData("http://www.google.com/?foo=bar&", "foo", "bar")]
+        [InlineData("http://www.google.com/?foo=bar", "foo", "bar")]
+        public void GetQueryValue(string url, string key, string expected)
+        {
+            // arrange
+
+            // act
+            var query = Url.GetQueryValue(url, key);
+
+            // assert
+            Assert.Equal(expected, query);
+        }
+
+        [Theory]
+        [InlineData("http://www.google.com/?foo=bar&fizz=0&fizz=1&foo=1", "foo", new[] { "bar", "1" })]
+        [InlineData("http://www.google.com/?foo=bar&fizz=0", "fizz", new[] { "0" })]
+        [InlineData("http://www.google.com/?foo=bar&", "foo", new[] { "bar" })]
+        [InlineData("http://www.google.com/?foo=bar", "foo", new[] { "bar" })]
+        public void GetQueryValueAsArray(string url, string key, string[] expected)
+        {
+            // arrange
+
+            // act
+            var query = Url.GetQueryValueAsArray(url, key);
 
             // assert
             Assert.Equal(expected, query);
