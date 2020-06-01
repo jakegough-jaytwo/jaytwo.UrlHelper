@@ -47,15 +47,24 @@ Url.RemoveQuery("http://www.google.com/a/b?c=d");
 ### Path Operations:
 
 ```csharp
-Url.AppendPath("http://www.google.com/foo", "bar");
+Url.AppendPath("http://www.google.com", "foo/bar");
 // returns "http://www.google.com/foo/bar"
 Url.AppendPath("http://www.google.com/foo", "hello/{0}", new[] { "a b" });
 // returns "http://www.google.com/foo/hello/a%20b"
 
-Url.SetPath("http://www.google.com", "foo");
-// returns "http://www.google.com/foo"
+Url.SetPath("http://www.google.com", "foo/bar");
+// returns "http://www.google.com/foo/bar"
 Url.SetPath("http://www.google.com/foo", "hello/{0}", new[] { "a b" });
 // returns "http://www.google.com/hello/a%20b"
+```
+
+### Other Operations:
+
+```csharp
+Url.Format("http://www.google.com/{0}", "foo/bar");
+// returns "http://www.google.com/foo%2Fbar"
+Url.Format("http://www.google.com/foo/{0}", "bar");
+// returns "http://www.google.com/foo/bar"
 ```
 
 ---
