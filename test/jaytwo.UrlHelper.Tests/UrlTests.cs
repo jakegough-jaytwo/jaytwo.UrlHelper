@@ -111,7 +111,7 @@ namespace jaytwo.UrlHelper.Tests
         [Theory]
         [InlineData("http://www.google.com/{0}/foo.bar", new[] { "banana" }, "http://www.google.com/banana/foo.bar")]
         [InlineData("http://www.google.com/{0}/foo.bar", new[] { default(string) }, "http://www.google.com//foo.bar")]
-        [InlineData("{0}/foo.bar", new object[] { "abc" }, "abc/foo.bar")]
+        [InlineData("{0}/foo.bar", new string[] { "abc" }, "abc/foo.bar")]
         public void Format(string format, string[] args, string expectedUrl)
         {
             // arrange
