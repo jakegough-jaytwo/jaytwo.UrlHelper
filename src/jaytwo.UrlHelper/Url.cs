@@ -101,6 +101,11 @@ namespace jaytwo.UrlHelper
             return SetPath(url, newPath);
         }
 
+        public static string AppendPathSegment(string url, string segment)
+        {
+            return AppendPath(url, "{0}", segment);
+        }
+
         public static string AppendPath(string url, string pathFormat, params string[] formatArgs)
         {
             var escapedArgs = formatArgs?.Select(Uri.EscapeDataString).ToArray();

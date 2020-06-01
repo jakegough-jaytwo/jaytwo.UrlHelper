@@ -108,6 +108,20 @@ namespace jaytwo.UrlHelper.Tests
         }
 
         [Theory]
+        [InlineData("http://www.google.com", "foo", "http://www.google.com/foo")]
+        [InlineData("/foo?hello=world", "bar/baz", "/foo/bar%2Fbaz?hello=world")]
+        public void AppendPathSegment(string baseUrl, string path, string expectedUrl)
+        {
+            // arrange
+
+            // act
+            var url = Url.AppendPathSegment(baseUrl, path);
+
+            // assert
+            Assert.Equal(expectedUrl, url);
+        }
+
+        [Theory]
         [InlineData("http://www.google.com", "hello/{0}", new[] { "a b" }, "http://www.google.com/hello/a%20b")]
         [InlineData("http://www.google.com/foo", "hello/{0}", new[] { "a b" }, "http://www.google.com/foo/hello/a%20b")]
         [InlineData("/foo", "hello/{0}", new[] { "a b" }, "/foo/hello/a%20b")]
