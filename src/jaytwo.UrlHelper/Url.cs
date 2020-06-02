@@ -12,6 +12,9 @@ namespace jaytwo.UrlHelper
         {
             var escapedArgs = formatArgs?.Select(x => Uri.EscapeDataString(x ?? string.Empty)).ToArray();
             var path = string.Format(format, escapedArgs);
+
+            VerifyValidUrl(path);
+
             return path;
         }
 
@@ -30,10 +33,7 @@ namespace jaytwo.UrlHelper
                 result = Combine(result, segment, throwOnInvalid: false);
             }
 
-            if (!Uri.IsWellFormedUriString(result, UriKind.RelativeOrAbsolute))
-            {
-                throw new InvalidOperationException($"Resulting combined URL is not a well-formed relative or absolute URI string: '{result}'.");
-            }
+            VerifyValidUrl(result);
 
             return result;
         }
@@ -47,6 +47,7 @@ namespace jaytwo.UrlHelper
                 throw new ArgumentNullException(nameof(url));
             }
 
+            string result;
             var withoutQuery = RemoveQuery(url);
 
             if (Uri.IsWellFormedUriString(withoutQuery, UriKind.Absolute))
@@ -56,17 +57,24 @@ namespace jaytwo.UrlHelper
 
                 if (indexOfSlashAfterHost >= 0)
                 {
-                    return withoutQuery.Substring(indexOfSlashAfterHost);
+                    result = withoutQuery.Substring(indexOfSlashAfterHost);
                 }
                 else
                 {
-                    return string.Empty;
+                    result = string.Empty;
                 }
             }
             else
             {
-                return withoutQuery;
+                result = withoutQuery;
             }
+
+            if (!string.IsNullOrEmpty(result))
+            {
+                VerifyValidUrl(result);
+            }
+
+            return result;
         }
 
         public static string SetPath(string url, string path)
@@ -193,16 +201,20 @@ namespace jaytwo.UrlHelper
                 throw new ArgumentNullException(nameof(url));
             }
 
+            string result;
             var withoutQuery = RemoveQuery(url);
 
             if (!string.IsNullOrEmpty(query))
             {
-                return withoutQuery + "?" + query.TrimStart('?');
+                result = withoutQuery + "?" + query.TrimStart('?');
             }
             else
             {
-                return withoutQuery;
+                result = withoutQuery;
             }
+
+            VerifyValidUrl(result);
+            return result;
         }
 
         public static string SetQuery(string url, object data)
@@ -275,12 +287,20 @@ namespace jaytwo.UrlHelper
 
             result += (segment ?? string.Empty).TrimStart('/');
 
-            if (throwOnInvalid && !Uri.IsWellFormedUriString(result, UriKind.RelativeOrAbsolute))
+            if (throwOnInvalid)
             {
-                throw new InvalidOperationException($"Resulting combined URL is not a well-formed relative or absolute URI string: '{result}'.");
+                VerifyValidUrl(result);
             }
 
             return result;
+        }
+
+        private static void VerifyValidUrl(string url)
+        {
+            if (!Uri.IsWellFormedUriString(url, UriKind.RelativeOrAbsolute))
+            {
+                throw new InvalidOperationException($"Resulting URL is not a well-formed relative or absolute URI string: '{url}'.");
+            }
         }
     }
 }
