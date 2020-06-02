@@ -65,6 +65,11 @@ Url.Format("http://www.google.com/{0}", "foo/bar");
 // returns "http://www.google.com/foo%2Fbar"
 Url.Format("http://www.google.com/foo/{0}", "bar");
 // returns "http://www.google.com/foo/bar"
+
+Url.Combine("http://www.google.com/foo/", "bar");
+// returns "http://www.google.com/foo/bar"
+Url.Combine("http://www.google.com", "foo/bar?fizz=buzz");
+// returns "http://www.google.com/foo/bar?fizz=buzz"
 ```
 
 ---
