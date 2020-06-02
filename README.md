@@ -8,9 +8,10 @@ deal with imperfect systems and _less-than-properly-formatted_ URL's.  So, I wan
 URL as a string instead of the `Uri` as an object.
 
 At some point in my career I remember learning about a quirk in .NET that made `Uri.AbsoluteUri` and `Uri.ToString()` 
-handle escaping/unescaping/reescaping differently.  I'm pretty sure it had to do with escaping slashes in the path).  
+handle escaping/unescaping/reescaping differently.  I'm pretty sure it had to do with escaping slashes in the path.  
 I'm also pretty sure this is corrected by now and doesn't matter... but what can I say... old habits die hard.  
-It's easier in my brain to keep the strings as strings and avoid decoding/reencoding fromt the guts of `System.Uri` anyway.
+It's easier in my brain to keep the strings as strings and avoid decoding/reencoding from within the guts of 
+`System.Uri` anyway.
 
 ## Installation
 
@@ -21,6 +22,17 @@ PM> Install-Package jaytwo.UrlHelper
 ```
 
 ## Usage
+
+### Sample Real-Life Usage:
+```csharp
+var path = Url.Format("/v8/finance/chart/{0}", symbol);
+path = Url.SetQueryParameter(path, "includePrePost", "true");
+path = Url.SetQueryParameter(path, "interval", "1d");
+path = Url.SetQueryParameter(path, "range", "1m");
+
+var _baseUrl = "https://query1.finance.yahoo.com"
+var url = Url.Combine(_baseUrl, path);
+```
 
 ### Query Operations:
 
