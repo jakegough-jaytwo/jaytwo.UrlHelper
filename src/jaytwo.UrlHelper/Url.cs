@@ -21,6 +21,25 @@ namespace jaytwo.UrlHelper
             return Format(format, argsAsStrings);
         }
 
+        public static string Combine(string baseUrl, params string[] segments)
+        {
+            var result = baseUrl ?? string.Empty;
+
+            foreach (var segment in segments)
+            {
+                result = Combine(result, segment, throwOnInvalid: false);
+            }
+
+            if (!Uri.IsWellFormedUriString(result, UriKind.RelativeOrAbsolute))
+            {
+                throw new InvalidOperationException($"Resulting combined URL is not a well-formed relative or absolute URI string: '{result}'.");
+            }
+
+            return result;
+        }
+
+        public static string Combine(string baseUrl, string segment) => Combine(baseUrl, segment, throwOnInvalid: true);
+
         public static string GetPath(string url)
         {
             if (url == null)
@@ -101,15 +120,7 @@ namespace jaytwo.UrlHelper
             }
 
             var oldPath = GetPath(url);
-
-            var newPath = oldPath;
-            if (!newPath.EndsWith("/"))
-            {
-                newPath += "/";
-            }
-
-            newPath += path.TrimStart('/');
-
+            var newPath = Combine(oldPath, path);
             return SetPath(url, newPath);
         }
 
@@ -251,6 +262,25 @@ namespace jaytwo.UrlHelper
             {
                 return url;
             }
+        }
+
+        private static string Combine(string baseUrl, string segment, bool throwOnInvalid)
+        {
+            var result = baseUrl ?? string.Empty;
+
+            if (!result.EndsWith("/"))
+            {
+                result += "/";
+            }
+
+            result += (segment ?? string.Empty).TrimStart('/');
+
+            if (throwOnInvalid && !Uri.IsWellFormedUriString(result, UriKind.RelativeOrAbsolute))
+            {
+                throw new InvalidOperationException($"Resulting combined URL is not a well-formed relative or absolute URI string: '{result}'.");
+            }
+
+            return result;
         }
     }
 }

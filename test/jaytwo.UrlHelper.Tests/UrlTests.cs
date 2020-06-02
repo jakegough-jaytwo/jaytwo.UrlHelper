@@ -139,6 +139,45 @@ namespace jaytwo.UrlHelper.Tests
         }
 
         [Theory]
+        [InlineData("http://www.google.com", "banana", "http://www.google.com/banana")]
+        [InlineData("http://www.google.com/", "banana", "http://www.google.com/banana")]
+        [InlineData("http://www.google.com/foo", "banana", "http://www.google.com/foo/banana")]
+        [InlineData("http://www.google.com/foo/", "banana", "http://www.google.com/foo/banana")]
+        [InlineData("http://www.google.com/foo/", "banana/", "http://www.google.com/foo/banana/")]
+        [InlineData("http://www.google.com/foo/", "banana/rama", "http://www.google.com/foo/banana/rama")]
+        [InlineData("http://www.google.com/foo/", "banana/rama?fizz=buzz", "http://www.google.com/foo/banana/rama?fizz=buzz")]
+        public void Combine(string format, string segment, string expectedUrl)
+        {
+            // arrange
+
+            // act
+            var url = Url.Combine(format, segment);
+
+            // assert
+            Assert.Equal(expectedUrl, url);
+        }
+
+        [Theory]
+        [InlineData("http://www.google.com", new string[] { "banana" }, "http://www.google.com/banana")]
+        [InlineData("http://www.google.com/", new string[] { "banana" }, "http://www.google.com/banana")]
+        [InlineData("http://www.google.com/foo", new string[] { "banana" }, "http://www.google.com/foo/banana")]
+        [InlineData("http://www.google.com/foo/", new string[] { "banana" }, "http://www.google.com/foo/banana")]
+        [InlineData("http://www.google.com/foo/", new string[] { "banana/" }, "http://www.google.com/foo/banana/")]
+        [InlineData("http://www.google.com/foo/", new string[] { "banana/rama" }, "http://www.google.com/foo/banana/rama")]
+        [InlineData("http://www.google.com/foo/", new string[] { "banana", "rama" }, "http://www.google.com/foo/banana/rama")]
+        [InlineData("http://www.google.com/foo/", new string[] { "banana", "rama?fizz=buzz" }, "http://www.google.com/foo/banana/rama?fizz=buzz")]
+        public void Combine_multiple_segments(string format, string[] segments, string expectedUrl)
+        {
+            // arrange
+
+            // act
+            var url = Url.Combine(format, segments);
+
+            // assert
+            Assert.Equal(expectedUrl, url);
+        }
+
+        [Theory]
         [InlineData("http://www.google.com", "hello/{0}", new[] { "a b" }, "http://www.google.com/hello/a%20b")]
         [InlineData("http://www.google.com/foo", "hello/{0}", new[] { "a b" }, "http://www.google.com/foo/hello/a%20b")]
         [InlineData("/foo", "hello/{0}", new[] { "a b" }, "/foo/hello/a%20b")]
