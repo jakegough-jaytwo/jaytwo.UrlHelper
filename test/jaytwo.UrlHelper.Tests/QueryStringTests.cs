@@ -6,7 +6,7 @@ using Xunit;
 
 namespace jaytwo.UrlHelper.Tests
 {
-    public class QueryStringUtilityTests
+    public class QueryStringTests
     {
         public static IEnumerable<object[]> GetQueryString_object_data()
         {
@@ -23,7 +23,7 @@ namespace jaytwo.UrlHelper.Tests
             // arrange
 
             // act
-            var query = QueryStringUtility.ParseQueryString(queryString);
+            var query = QueryString.Deserialize(queryString);
 
             // assert
             var expected = JsonConvert.DeserializeObject<IDictionary<string, string[]>>(expectedDictionaryJson);
@@ -40,7 +40,7 @@ namespace jaytwo.UrlHelper.Tests
             var data = JsonConvert.DeserializeObject<IDictionary<string, string[]>>(dataJson);
 
             // act
-            var queryString = QueryStringUtility.GetQueryString(data);
+            var queryString = QueryString.Serialize(data);
 
             // assert
             Assert.Equal(expectedQueryString, queryString);
@@ -55,7 +55,7 @@ namespace jaytwo.UrlHelper.Tests
             var data = JsonConvert.DeserializeObject<IDictionary<string, string>>(dataJson);
 
             // act
-            var queryString = QueryStringUtility.GetQueryString(data);
+            var queryString = QueryString.Serialize(data);
 
             // assert
             Assert.Equal(expectedQueryString, queryString);
@@ -68,7 +68,7 @@ namespace jaytwo.UrlHelper.Tests
             // arrange
 
             // act
-            var queryString = QueryStringUtility.GetQueryString(data);
+            var queryString = QueryString.Serialize(data);
 
             // assert
             Assert.Equal(expectedQueryString, queryString);

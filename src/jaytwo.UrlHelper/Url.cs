@@ -166,7 +166,7 @@ namespace jaytwo.UrlHelper
         public static string[] GetQueryValueAsArray(string url, string key)
         {
             var query = GetQuery(url);
-            var parsedQuery = QueryStringUtility.ParseQueryString(query);
+            var parsedQuery = QueryString.Deserialize(query);
 
             if (parsedQuery.ContainsKey(key))
             {
@@ -224,16 +224,16 @@ namespace jaytwo.UrlHelper
                 throw new ArgumentNullException(nameof(url));
             }
 
-            var query = QueryStringUtility.GetQueryString(data);
+            var query = QueryString.Serialize(data);
             return SetQuery(url, query);
         }
 
         public static string SetQueryParameter(string url, string key, string value)
         {
-            var parsedQuery = QueryStringUtility.ParseQueryString(GetQuery(url));
+            var parsedQuery = QueryString.Deserialize(GetQuery(url));
             parsedQuery[key] = new[] { value };
 
-            var query = QueryStringUtility.GetQueryString(parsedQuery);
+            var query = QueryString.Serialize(parsedQuery);
             return SetQuery(url, query);
         }
 
@@ -241,7 +241,7 @@ namespace jaytwo.UrlHelper
 
         public static string AddQueryParameter(string url, string key, string value)
         {
-            var parsedQuery = QueryStringUtility.ParseQueryString(GetQuery(url));
+            var parsedQuery = QueryString.Deserialize(GetQuery(url));
             if (parsedQuery.ContainsKey(key))
             {
                 var newValues = new List<string>(parsedQuery[key]);
@@ -253,7 +253,7 @@ namespace jaytwo.UrlHelper
                 parsedQuery[key] = new[] { value };
             }
 
-            var query = QueryStringUtility.GetQueryString(parsedQuery);
+            var query = QueryString.Serialize(parsedQuery);
             return SetQuery(url, query);
         }
 
@@ -261,13 +261,13 @@ namespace jaytwo.UrlHelper
 
         public static string RemoveQueryParameter(string url, string key)
         {
-            var parsedQuery = QueryStringUtility.ParseQueryString(GetQuery(url));
+            var parsedQuery = QueryString.Deserialize(GetQuery(url));
 
             if (parsedQuery.ContainsKey(key))
             {
                 parsedQuery.Remove(key);
 
-                var query = QueryStringUtility.GetQueryString(parsedQuery);
+                var query = QueryString.Serialize(parsedQuery);
                 return SetQuery(url, query);
             }
             else

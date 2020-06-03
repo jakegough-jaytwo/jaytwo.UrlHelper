@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -7,19 +8,19 @@ using System.Text.RegularExpressions;
 
 namespace jaytwo.UrlHelper
 {
-    internal class QueryStringUtility
+    public static class QueryString
     {
-        public static string GetQueryString(object data)
+        public static string Serialize(object data)
         {
             var runtimeProperties = data.GetType().GetRuntimeProperties();
             var dictionary = runtimeProperties
                 .Where(x => x.GetValue(data) != null)
                 .ToDictionary(m => m.Name, m => m.GetValue(data));
 
-            return GetQueryString(dictionary);
+            return Serialize(dictionary);
         }
 
-        public static string GetQueryString(IDictionary<string, object> data)
+        public static string Serialize(IDictionary<string, object> data)
         {
             var asKeyValuePairs = new List<KeyValuePair<string, string>>();
 
@@ -40,25 +41,38 @@ namespace jaytwo.UrlHelper
                 }
             }
 
-            return GetQueryString(asKeyValuePairs);
+            return Serialize(asKeyValuePairs);
         }
 
-        public static string GetQueryString(IDictionary<string, string[]> data)
+        public static string Serialize(IDictionary<string, string[]> data)
         {
             var asKeyValuePairs = data.SelectMany(keyValuePair =>
                 keyValuePair.Value.Select(value =>
                     new KeyValuePair<string, string>(keyValuePair.Key, value)));
 
-            return GetQueryString(asKeyValuePairs);
+            return Serialize(asKeyValuePairs);
         }
 
-        public static string GetQueryString(IDictionary<string, string> data)
+        public static string Serialize(IDictionary<string, string> data)
         {
             var asKeyValuePairs = data.ToList();
-            return GetQueryString(asKeyValuePairs);
+            return Serialize(asKeyValuePairs);
         }
 
-        public static IDictionary<string, string[]> ParseQueryString(string queryString)
+        public static string Serialize(IEnumerable<KeyValuePair<string, string>> data)
+        {
+            return string.Join("&", data.Select(x => $"{Uri.EscapeDataString(x.Key)}={Uri.EscapeDataString(x.Value ?? string.Empty)}"));
+        }
+
+#if NETFRAMEWORK || NETSTANDARD2
+        public static string Serialize(NameValueCollection data)
+        {
+            var asDictionary = data.AllKeys.ToDictionary(x => x, x => data.GetValues(x));
+            return Serialize(asDictionary);
+        }
+#endif
+
+        public static IDictionary<string, string[]> Deserialize(string queryString)
         {
             var keyValuePairsWithDuplicateKeys = ParseQueryStringAsKeyValuePairs(queryString);
 
@@ -72,11 +86,6 @@ namespace jaytwo.UrlHelper
                 .ToDictionary(x => x.Key, x => x.values);
 
             return result;
-        }
-
-        private static string GetQueryString(IEnumerable<KeyValuePair<string, string>> data)
-        {
-            return string.Join("&", data.Select(x => $"{Uri.EscapeDataString(x.Key)}={Uri.EscapeDataString(x.Value ?? string.Empty)}"));
         }
 
         private static IList<KeyValuePair<string, string>> ParseQueryStringAsKeyValuePairs(string queryString)
