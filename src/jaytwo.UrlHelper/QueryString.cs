@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Text.RegularExpressions;
 
 namespace jaytwo.UrlHelper
 {
@@ -64,7 +62,7 @@ namespace jaytwo.UrlHelper
             return string.Join("&", data.Select(x => $"{Uri.EscapeDataString(x.Key)}={Uri.EscapeDataString(x.Value ?? string.Empty)}"));
         }
 
-#if NETFRAMEWORK || NETSTANDARD2
+#if NETFRAMEWORK || !NETSTANDARD1
         public static string Serialize(NameValueCollection data)
         {
             var asDictionary = data.AllKeys.ToDictionary(x => x, x => data.GetValues(x));
