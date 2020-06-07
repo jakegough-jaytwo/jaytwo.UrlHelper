@@ -153,7 +153,7 @@ namespace jaytwo.UrlHelper
 
             var queryStartPosition = url.IndexOf('?');
 
-            if (queryStartPosition > 0)
+            if (queryStartPosition >= 0)
             {
                 return url.Substring(queryStartPosition);
             }
@@ -185,7 +185,7 @@ namespace jaytwo.UrlHelper
                 throw new ArgumentNullException(nameof(url));
             }
 
-            var queryStartPosition = url.LastIndexOf('?');
+            var queryStartPosition = url.IndexOf('?');
 
             var result = (queryStartPosition < 0)
                 ? url

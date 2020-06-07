@@ -56,6 +56,8 @@ namespace jaytwo.UrlHelper.Tests
         [InlineData("foo", "foo%2Fbar", "foo%2Fbar")]
         [InlineData("/foo?hello=world", "/bar", "/bar?hello=world")]
         [InlineData("/foo?hello=world", "bar", "/bar?hello=world")]
+        [InlineData("?hello=world", "bar", "bar?hello=world")]
+        [InlineData("", "bar", "bar")]
         public void SetPath(string baseUrl, string path, string expectedUrl)
         {
             // arrange
@@ -201,6 +203,8 @@ namespace jaytwo.UrlHelper.Tests
         [InlineData("/a?foo=bar", "fi&zz", "bu zz", "/a?foo=bar&fi%26zz=bu%20zz")]
         [InlineData("/a?fi%26zz=bu%20zz", "foo", "bar", "/a?fi%26zz=bu%20zz&foo=bar")]
         [InlineData("/a?fi%26zz=bu%20zz", "foo", null, "/a?fi%26zz=bu%20zz&foo=")]
+        [InlineData("?fizz=buzz", "foo", "bar", "?fizz=buzz&foo=bar")]
+        [InlineData("", "foo", "bar", "?foo=bar")]
         public void SetQueryParameter(string baseUrl, string key, string value, string expectedUrl)
         {
             // arrange
@@ -278,6 +282,21 @@ namespace jaytwo.UrlHelper.Tests
 
             // assert
             Assert.Equal(expected, query);
+        }
+
+        [Theory]
+        [InlineData("", "/hello", "foo=bar", "/hello?foo=bar")]
+        [InlineData("http://www.google.com", "/hello", "foo=bar", "http://www.google.com/hello?foo=bar")]
+        public void SetQuery_before_SetPath(string url, string path, string query, string expectedUrl)
+        {
+            // arrange
+            url = Url.SetQuery(url, query);
+
+            // act
+            url = Url.SetPath(url, path);
+
+            // assert
+            Assert.Equal(expectedUrl, url);
         }
     }
 }
