@@ -278,14 +278,23 @@ namespace jaytwo.UrlHelper
 
         private static string Combine(string baseUrl, string segment, bool throwOnInvalid)
         {
-            var result = baseUrl ?? string.Empty;
+            string result;
 
-            if (!result.EndsWith("/"))
+            if (string.IsNullOrEmpty(baseUrl))
             {
-                result += "/";
+                result = segment;
             }
+            else
+            {
+                result = baseUrl;
 
-            result += (segment ?? string.Empty).TrimStart('/');
+                if (!result.EndsWith("/"))
+                {
+                    result += "/";
+                }
+
+                result += (segment ?? string.Empty).TrimStart('/');
+            }
 
             if (throwOnInvalid)
             {
