@@ -3,12 +3,13 @@
   <PropertyGroup>
     <TargetFrameworks>net45;netstandard1.1;netstandard1.3;netstandard1.6;netstandard2.0;netstandard2.1</TargetFrameworks>
     <VersionPrefix>0.1.6</VersionPrefix>
-    <RepositoryUrl>https://github.com/jakegough/jaytwo.UrlHelper</RepositoryUrl>
+    <RepositoryUrl>https://github.com/jakegough/jaytwo.UrlHelper.git</RepositoryUrl>
+    <RepositoryType>git</RepositoryType> 
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-    <PublishRepositoryUrl>true</PublishRepositoryUrl>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(TargetFramework)' == 'net45'">
