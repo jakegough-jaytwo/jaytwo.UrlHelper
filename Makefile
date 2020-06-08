@@ -35,10 +35,12 @@ publish:
 	cd ./src/jaytwo.UrlHelper; \
 		dotnet publish -o ../../out/published
 
+DOCKER_BASE_TAG?=${DOCKER_TAG}__builder
 DOCKER_BUILDER_TAG?=${DOCKER_TAG}__builder
 DOCKER_BUILDER_CONTAINER?=${DOCKER_BUILDER_TAG}
 docker-builder:
-	docker build -t ${DOCKER_BUILDER_TAG} . --target base --pull
+	# building the base image to force caching those layers in an otherwise discarded stage of the multistage dockerfile
+	docker build -t ${DOCKER_BASE_TAG} . --target base --pull
 	docker build -t ${DOCKER_BUILDER_TAG} . --target builder --pull
 
 docker: docker-builder
@@ -68,5 +70,6 @@ docker-pack-beta: docker-builder docker-pack-beta-only
 
 docker-clean:
 	docker rm ${DOCKER_BUILDER_CONTAINER} || echo "Container not found: ${DOCKER_BUILDER_CONTAINER}"
+	# not removing image DOCKER_BASE_TAG since we want the layer cache to stick around (hopefully they will be cleaned up on the scheduled job)
 	docker rmi ${DOCKER_BUILDER_TAG} || echo "Image not found: ${DOCKER_BUILDER_TAG}"
 	docker rmi ${DOCKER_TAG} || echo "Image not found: ${DOCKER_TAG}"
