@@ -35,7 +35,7 @@ publish:
 	cd ./src/jaytwo.UrlHelper; \
 		dotnet publish -o ../../out/published
 
-DOCKER_BASE_TAG?=${DOCKER_TAG}__builder
+DOCKER_BASE_TAG?=${DOCKER_TAG}__base
 DOCKER_BUILDER_TAG?=${DOCKER_TAG}__builder
 DOCKER_BUILDER_CONTAINER?=${DOCKER_BUILDER_TAG}
 docker-builder:
