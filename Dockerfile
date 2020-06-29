@@ -19,4 +19,4 @@ ENV PATH="${PATH}:/root/.dotnet/tools"
 FROM base AS builder
 WORKDIR /build
 COPY . /build
-RUN make deps restore
+RUN make deps restore build
