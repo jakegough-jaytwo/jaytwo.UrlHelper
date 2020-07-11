@@ -11,6 +11,7 @@ namespace jaytwo.UrlHelper.Tests
         public static IEnumerable<object[]> GetQueryString_object_data()
         {
             yield return new object[] { new { foo = "bar", fizz = "buzz" }, "foo=bar&fizz=buzz" };
+            yield return new object[] { new { foo = new object[] { "bar", 123 }, fizz = "buzz" }, "foo=bar&foo=123&fizz=buzz" };
             yield return new object[] { new { foo = new[] { "bar", "baz" }, fizz = new[] { "buzz" } }, "foo=bar&foo=baz&fizz=buzz" };
             yield return new object[] { new { foo = "hello world" }, "foo=hello%20world" };
         }
@@ -47,12 +48,42 @@ namespace jaytwo.UrlHelper.Tests
         }
 
         [Theory]
+        [InlineData("{ \"foo\": [ 123 ], \"fizz\": [ \"buzz\" ] }", "foo=123&fizz=buzz")]
+        [InlineData("{ \"foo\": [ \"hello world\" ] }", "foo=hello%20world")]
+        public void GetQueryString_dictionary_string_objectarray(string dataJson, string expectedQueryString)
+        {
+            // arrange
+            var data = JsonConvert.DeserializeObject<IDictionary<string, object[]>>(dataJson);
+
+            // act
+            var queryString = QueryString.Serialize(data);
+
+            // assert
+            Assert.Equal(expectedQueryString, queryString);
+        }
+
+        [Theory]
         [InlineData("{ \"foo\": \"bar\", \"fizz\": \"buzz\" }", "foo=bar&fizz=buzz")]
         [InlineData("{ \"foo\": \"hello world\" }", "foo=hello%20world")]
         public void GetQueryString_dictionary_string_string(string dataJson, string expectedQueryString)
         {
             // arrange
             var data = JsonConvert.DeserializeObject<IDictionary<string, string>>(dataJson);
+
+            // act
+            var queryString = QueryString.Serialize(data);
+
+            // assert
+            Assert.Equal(expectedQueryString, queryString);
+        }
+
+        [Theory]
+        [InlineData("{ \"foo\": 123, \"fizz\": \"buzz\" }", "foo=123&fizz=buzz")]
+        [InlineData("{ \"foo\": \"hello world\" }", "foo=hello%20world")]
+        public void GetQueryString_dictionary_string_object(string dataJson, string expectedQueryString)
+        {
+            // arrange
+            var data = JsonConvert.DeserializeObject<IDictionary<string, object>>(dataJson);
 
             // act
             var queryString = QueryString.Serialize(data);
