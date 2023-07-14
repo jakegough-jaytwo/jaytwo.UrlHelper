@@ -1,8 +1,8 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net45;netstandard1.1;netstandard1.3;netstandard1.6;netstandard2.0;netstandard2.1</TargetFrameworks>
-    <VersionPrefix>0.1.7</VersionPrefix>
+    <TargetFrameworks>netstandard1.1;netstandard1.3;netstandard1.6;netstandard2.0;netstandard2.1;net6.0</TargetFrameworks>
+    <VersionPrefix>0.1.8</VersionPrefix>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <RepositoryUrl>https://github.com/jakegough/jaytwo.UrlHelper.git</RepositoryUrl>
     <RepositoryType>git</RepositoryType> 
@@ -17,7 +17,7 @@
 
   <!-- sourcelink (only needed on the published package project) -->
   <ItemGroup>
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
   </ItemGroup>
 
   <PropertyGroup>
@@ -40,19 +40,5 @@
     <CodeAnalysisRuleSet>$(ProjectDir)..\..\stylecop.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <!-- /stylecop -->
-
-  <!-- coverlet & cobertura -->
-  <ItemGroup>
-    <PackageReference Include="coverlet.msbuild" Version="2.9.0" PrivateAssets="All" />
-  </ItemGroup>
-
-  <PropertyGroup>
-    <CollectCoverage>true</CollectCoverage>
-    <Exclude>[xunit.*]*</Exclude>
-    <ExcludeByAttribute>Obsolete,GeneratedCodeAttribute,CompilerGeneratedAttribute</ExcludeByAttribute>
-    <CoverletOutputFormat>cobertura</CoverletOutputFormat>
-    <CoverletOutput>$(MSBuildThisFileDirectory)../../out/coverage/$(AssemblyName)/$(TargetFramework)/</CoverletOutput>
-  </PropertyGroup>
-  <!-- /coverlet & cobertura -->
 
 </Project>

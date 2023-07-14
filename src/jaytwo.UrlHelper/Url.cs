@@ -77,6 +77,34 @@ namespace jaytwo.UrlHelper
             return result;
         }
 
+        public static string[] GetPathSegments(string url)
+        {
+            var path = GetPath(url);
+
+            if (string.IsNullOrEmpty(path) || path == "/")
+            {
+                return new string[] { };
+            }
+
+            if (path.StartsWith("/"))
+            {
+                path = path.Substring(1);
+            }
+
+            return path.Split('/');
+        }
+
+        public static string GetPathSegment(string url, int index)
+        {
+            var pathSegments = GetPathSegments(url);
+            if (pathSegments.Length <= index)
+            {
+                return null;
+            }
+
+            return pathSegments[index];
+        }
+
         public static string SetPath(string url, string path)
         {
             if (url == null)
@@ -106,6 +134,20 @@ namespace jaytwo.UrlHelper
 
                 return SetQuery(prefix + path.TrimStart('/'), query);
             }
+        }
+
+        public static string SetPathSegment(string url, int index, string value)
+        {
+            var pathSegments = GetPathSegments(url);
+            if (pathSegments.Length <= index)
+            {
+                return null;
+            }
+
+            pathSegments[index] = value;
+            var path = string.Join("/", pathSegments);
+
+            return SetPath(url, path);
         }
 
         public static string SetPath(string url, string pathFormat, params string[] formatArgs)
