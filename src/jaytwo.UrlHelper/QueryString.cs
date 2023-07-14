@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
@@ -15,58 +16,27 @@ namespace jaytwo.UrlHelper
                 .Where(x => x.GetValue(data) != null)
                 .ToDictionary(m => m.Name, m => m.GetValue(data));
 
-            return Serialize(dictionary);
+            return SerializeDictionary(dictionary);
         }
 
-        public static string Serialize(IDictionary<string, object> data)
-        {
-            var asKeyValuePairs = new List<KeyValuePair<string, string>>();
+        public static string Serialize(IDictionary<string, string> data) => SerializeDictionary(data);
 
-            foreach (var keyValuePair in data)
-            {
-                var asArray = keyValuePair.Value as Array;
+        public static string Serialize(IDictionary<string, string[]> data) => SerializeDictionary(data);
 
-                if (asArray != null)
-                {
-                    foreach (var item in asArray)
-                    {
-                        asKeyValuePairs.Add(new KeyValuePair<string, string>(keyValuePair.Key, $"{item}"));
-                    }
-                }
-                else
-                {
-                    asKeyValuePairs.Add(new KeyValuePair<string, string>(keyValuePair.Key, $"{keyValuePair.Value}"));
-                }
-            }
+        public static string Serialize(IDictionary<string, object> data) => SerializeDictionary(data);
 
-            return Serialize(asKeyValuePairs);
-        }
-
-        public static string Serialize(IDictionary<string, string[]> data)
-        {
-            var asKeyValuePairs = data.SelectMany(keyValuePair =>
-                keyValuePair.Value.Select(value =>
-                    new KeyValuePair<string, string>(keyValuePair.Key, value)));
-
-            return Serialize(asKeyValuePairs);
-        }
-
-        public static string Serialize(IDictionary<string, string> data)
-        {
-            var asKeyValuePairs = data.ToList();
-            return Serialize(asKeyValuePairs);
-        }
+        public static string Serialize(IDictionary<string, object[]> data) => SerializeDictionary(data);
 
         public static string Serialize(IEnumerable<KeyValuePair<string, string>> data)
         {
             return string.Join("&", data.Select(x => $"{Uri.EscapeDataString(x.Key)}={Uri.EscapeDataString(x.Value ?? string.Empty)}"));
         }
 
-#if NETFRAMEWORK || !NETSTANDARD1
+#if !(NETSTANDARD1_1 || NETSTANDARD1_3 || NETSTANDARD1_6)
         public static string Serialize(NameValueCollection data)
         {
             var asDictionary = data.AllKeys.ToDictionary(x => x, x => data.GetValues(x));
-            return Serialize(asDictionary);
+            return SerializeDictionary(asDictionary);
         }
 #endif
 
@@ -105,6 +75,46 @@ namespace jaytwo.UrlHelper
             }
 
             return result;
+        }
+
+        private static string SerializeDictionary<T>(IDictionary<string, T> data)
+        {
+            var asKeyValuePairs = GetKeyValuePairs<T>(data).ToList();
+            return Serialize(asKeyValuePairs);
+        }
+
+        private static IEnumerable<KeyValuePair<string, string>> GetKeyValuePairs<T>(IDictionary<string, T> data)
+        {
+            foreach (var keyValuePair in data)
+            {
+                var asArray = keyValuePair.Value as Array;
+
+                if (asArray != null)
+                {
+                    foreach (var item in asArray)
+                    {
+                        yield return GetKeyValuePair(keyValuePair.Key, item);
+                    }
+                }
+                else
+                {
+                    yield return GetKeyValuePair(keyValuePair.Key, keyValuePair.Value);
+                }
+            }
+        }
+
+        private static KeyValuePair<string, string> GetKeyValuePair(string key, object value)
+        {
+            var asString = value as string;
+
+            if (asString != null)
+            {
+                return new KeyValuePair<string, string>(key, asString);
+            }
+            else
+            {
+                return new KeyValuePair<string, string>(key, value?.ToString());
+            }
         }
     }
 }

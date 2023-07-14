@@ -1,6 +1,18 @@
 # jaytwo.UrlHelper
 
-[![NuGet version (jaytwo.UrlHelper)](https://img.shields.io/nuget/v/jaytwo.UrlHelper.svg?style=flat-square)](https://www.nuget.org/packages/jaytwo.UrlHelper/)
+<p align="center">
+  <a href="https://jenkins.jaytwo.com/job/jaytwo.UrlHelper/job/master/" alt="Build Status (master)">
+    <img src="https://jenkins.jaytwo.com/buildStatus/icon?job=jaytwo.UrlHelper%2Fmaster&subject=build%20(master)" /></a>
+  <a href="https://jenkins.jaytwo.com/job/jaytwo.UrlHelper/job/develop/" alt="Build Status (develop)">
+    <img src="https://jenkins.jaytwo.com/buildStatus/icon?job=jaytwo.UrlHelper%2Fdevelop&subject=build%20(develop)" /></a>
+</p>
+
+<p align="center">
+  <a href="https://www.nuget.org/packages/jaytwo.UrlHelper/" alt="NuGet Package jaytwo.UrlHelper">
+    <img src="https://img.shields.io/nuget/v/jaytwo.UrlHelper.svg?logo=nuget&label=jaytwo.UrlHelper" /></a>
+  <a href="https://www.nuget.org/packages/jaytwo.UrlHelper/" alt="NuGet Package jaytwo.UrlHelper (beta)">
+    <img src="https://img.shields.io/nuget/vpre/jaytwo.UrlHelper.svg?logo=nuget&label=jaytwo.UrlHelper" /></a>
+</p>
 
 Simple URL manipulation.  I wanted a way to manipulate a URL as a string without relying on transforming 
 it to a `System.Uri` and back again.  This was not a performance or optimization reasons.  Rather, I sometimes

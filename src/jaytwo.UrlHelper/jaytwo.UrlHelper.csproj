@@ -1,76 +1,44 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net45;netstandard1.1;netstandard1.3;netstandard1.6;netstandard2.0;netstandard2.1</TargetFrameworks>
-    <VersionPrefix>0.1.6</VersionPrefix>
+    <TargetFrameworks>netstandard1.1;netstandard1.3;netstandard1.6;netstandard2.0;netstandard2.1;net6.0</TargetFrameworks>
+    <VersionPrefix>0.1.8</VersionPrefix>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <RepositoryUrl>https://github.com/jakegough/jaytwo.UrlHelper.git</RepositoryUrl>
     <RepositoryType>git</RepositoryType> 
-    <PublishRepositoryUrl>true</PublishRepositoryUrl>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <IncludeSymbols>true</IncludeSymbols>
-    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(TargetFramework)' == 'net45'">
-    <DefineConstants>$(DefineConstants);NETFRAMEWORK</DefineConstants>
-    <DefineConstants>$(DefineConstants);NETFRAMEWORK4</DefineConstants>
-  </PropertyGroup>
+  <!--
+    // https://docs.microsoft.com/en-us/dotnet/standard/frameworks
+    // preprocessor symbols for free:
+    //    NETFRAMEWORK, NET45,
+    //    NETSTANDARD, NETSTANDARD1_1, NETSTANDARD1_3, NETSTANDARD1_6, NETSTANDARD2_0, NETSTANDARD2_1
+  -->
 
-  <PropertyGroup Condition="'$(TargetFramework)' == 'netstandard1.1'">
-    <DefineConstants>$(DefineConstants);NETSTANDARD</DefineConstants>
-    <DefineConstants>$(DefineConstants);NETSTANDARD1</DefineConstants>
-    <DefineConstants>$(DefineConstants);NETSTANDARD1_1</DefineConstants>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(TargetFramework)' == 'netstandard1.3'">
-    <DefineConstants>$(DefineConstants);NETSTANDARD</DefineConstants>
-    <DefineConstants>$(DefineConstants);NETSTANDARD1</DefineConstants>
-    <DefineConstants>$(DefineConstants);NETSTANDARD1_3</DefineConstants>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(TargetFramework)' == 'netstandard1.6'">
-    <DefineConstants>$(DefineConstants);NETSTANDARD</DefineConstants>
-    <DefineConstants>$(DefineConstants);NETSTANDARD1</DefineConstants>
-    <DefineConstants>$(DefineConstants);NETSTANDARD1_6</DefineConstants>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
-    <DefineConstants>$(DefineConstants);NETSTANDARD</DefineConstants>
-    <DefineConstants>$(DefineConstants);NETSTANDARD2</DefineConstants>
-    <DefineConstants>$(DefineConstants);NETSTANDARD2_0</DefineConstants>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(TargetFramework)' == 'netstandard2.1'">
-    <DefineConstants>$(DefineConstants);NETSTANDARD</DefineConstants>
-    <DefineConstants>$(DefineConstants);NETSTANDARD2</DefineConstants>
-    <DefineConstants>$(DefineConstants);NETSTANDARD2_1</DefineConstants>
-  </PropertyGroup>
-
+  <!-- sourcelink (only needed on the published package project) -->
   <ItemGroup>
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All"/>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
   </ItemGroup>
 
+  <PropertyGroup>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+  </PropertyGroup>
+  <!-- /sourcelink -->
+
+  <!-- stylecop -->
   <ItemGroup>
+    <PackageReference Include="StyleCop.Analyzers" Version="1.1.118" PrivateAssets="All" />
+    <PackageReference Include="StyleCop.Analyzers.Error" Version="1.0.2" PrivateAssets="All" />
     <AdditionalFiles Include="$(ProjectDir)..\..\stylecop.json" Link="stylecop.json" />
   </ItemGroup>
 
   <PropertyGroup>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <StyleCopTreatErrorsAsWarnings>true</StyleCopTreatErrorsAsWarnings>
     <CodeAnalysisRuleSet>$(ProjectDir)..\..\stylecop.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
+  <!-- /stylecop -->
 
-  <ItemGroup>
-    <PackageReference Include="StyleCop.Analyzers" Version="1.1.118" PrivateAssets="All" />
-    <PackageReference Include="StyleCop.Analyzers.Error" Version="1.0.2" PrivateAssets="All" />
-  </ItemGroup>
-
-  <PropertyGroup>
-    <UseSourceLink>true</UseSourceLink>
-    <CollectCoverage>true</CollectCoverage>
-    <Exclude>[xunit.*]*</Exclude>
-    <ExcludeByAttribute>Obsolete,GeneratedCodeAttribute,CompilerGeneratedAttribute</ExcludeByAttribute>
-    <CoverletOutputFormat>cobertura</CoverletOutputFormat>
-    <CoverletOutput>$(MSBuildThisFileDirectory)../../out/coverage/$(AssemblyName)/$(TargetFramework)/</CoverletOutput>
-  </PropertyGroup>
 </Project>

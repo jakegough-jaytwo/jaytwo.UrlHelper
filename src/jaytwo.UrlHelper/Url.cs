@@ -77,6 +77,38 @@ namespace jaytwo.UrlHelper
             return result;
         }
 
+        public static string[] GetPathSegments(string url)
+            => GetPathSegments(url, out var _);
+
+        public static string[] GetPathSegments(string url, out string originalPath)
+        {
+            originalPath = GetPath(url);
+
+            var path = originalPath;
+            if (string.IsNullOrEmpty(path) || path == "/")
+            {
+                return new string[] { };
+            }
+
+            if (path.StartsWith("/"))
+            {
+                path = path.Substring(1);
+            }
+
+            return path.Split('/');
+        }
+
+        public static string GetPathSegment(string url, int index)
+        {
+            var pathSegments = GetPathSegments(url);
+            if (pathSegments.Length <= index)
+            {
+                return null;
+            }
+
+            return pathSegments[index];
+        }
+
         public static string SetPath(string url, string path)
         {
             if (url == null)
@@ -96,16 +128,36 @@ namespace jaytwo.UrlHelper
                     ? withoutQuery.Substring(0, indexOfSlashAfterHost)
                     : withoutQuery;
 
-                return SetQuery(prefix + "/" + path.TrimStart('/'), query);
+                if (!path.StartsWith("/") && !prefix.EndsWith("/"))
+                {
+                    prefix += "/";
+                }
+
+                return SetQuery(prefix + path, query);
             }
             else
             {
-                var prefix = withoutQuery.StartsWith("/") || path.StartsWith("/")
-                    ? "/"
-                    : string.Empty;
-
-                return SetQuery(prefix + path.TrimStart('/'), query);
+                return SetQuery(path, query);
             }
+        }
+
+        public static string SetPathSegment(string url, int index, string value)
+        {
+            var pathSegments = GetPathSegments(url, out var originalPath);
+            if (pathSegments.Length <= index)
+            {
+                return null;
+            }
+
+            pathSegments[index] = Uri.EscapeDataString(value ?? string.Empty);
+            var path = string.Join("/", pathSegments);
+
+            if (originalPath.StartsWith("/"))
+            {
+                path = "/" + path;
+            }
+
+            return SetPath(url, path);
         }
 
         public static string SetPath(string url, string pathFormat, params string[] formatArgs)
