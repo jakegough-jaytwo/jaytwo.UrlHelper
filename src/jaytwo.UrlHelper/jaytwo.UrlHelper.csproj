@@ -1,8 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard1.1;netstandard1.3;netstandard1.6;netstandard2.0;netstandard2.1;net6.0</TargetFrameworks>
-    <VersionPrefix>0.1.8</VersionPrefix>
+    <TargetFrameworks>net462;netstandard2.1;net6.0;net8.0</TargetFrameworks>
+    <VersionPrefix>0.2.0</VersionPrefix>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <RepositoryUrl>https://github.com/jakegough/jaytwo.UrlHelper.git</RepositoryUrl>
     <RepositoryType>git</RepositoryType> 
@@ -26,19 +26,5 @@
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
   </PropertyGroup>
   <!-- /sourcelink -->
-
-  <!-- stylecop -->
-  <ItemGroup>
-    <PackageReference Include="StyleCop.Analyzers" Version="1.1.118" PrivateAssets="All" />
-    <PackageReference Include="StyleCop.Analyzers.Error" Version="1.0.2" PrivateAssets="All" />
-    <AdditionalFiles Include="$(ProjectDir)..\..\stylecop.json" Link="stylecop.json" />
-  </ItemGroup>
-
-  <PropertyGroup>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <StyleCopTreatErrorsAsWarnings>true</StyleCopTreatErrorsAsWarnings>
-    <CodeAnalysisRuleSet>$(ProjectDir)..\..\stylecop.ruleset</CodeAnalysisRuleSet>
-  </PropertyGroup>
-  <!-- /stylecop -->
 
 </Project>
