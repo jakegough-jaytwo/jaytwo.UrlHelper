@@ -1,30 +1,18 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net462;netstandard2.1;net6.0;net8.0</TargetFrameworks>
-    <VersionPrefix>0.2.0</VersionPrefix>
+    <TargetFrameworks>net462;netstandard2.0;net6.0;net8.0</TargetFrameworks>
+    <VersionPrefix>0.2.1</VersionPrefix>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <RepositoryUrl>https://github.com/jakegough/jaytwo.UrlHelper.git</RepositoryUrl>
-    <RepositoryType>git</RepositoryType> 
+    <RepositoryType>git</RepositoryType>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
 
-  <!--
-    // https://docs.microsoft.com/en-us/dotnet/standard/frameworks
-    // preprocessor symbols for free:
-    //    NETFRAMEWORK, NET45,
-    //    NETSTANDARD, NETSTANDARD1_1, NETSTANDARD1_3, NETSTANDARD1_6, NETSTANDARD2_0, NETSTANDARD2_1
-  -->
-
-  <!-- sourcelink (only needed on the published package project) -->
   <ItemGroup>
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
+    <InternalsVisibleTo Include="jaytwo.UrlHelper.Tests" />
+    <InternalsVisibleTo Include="DynamicProxyGenAssembly2" />
+    <None Include="..\..\README.md" Pack="true" PackagePath="" Link="README.md" />
   </ItemGroup>
-
-  <PropertyGroup>
-    <IncludeSymbols>true</IncludeSymbols>
-    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-    <PublishRepositoryUrl>true</PublishRepositoryUrl>
-  </PropertyGroup>
-  <!-- /sourcelink -->
 
 </Project>
